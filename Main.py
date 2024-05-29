@@ -55,19 +55,23 @@ def handle_question(message):
         run = client.beta.threads.runs.create_and_poll(
             thread_id=thread.id,
             assistant_id=assistant_id,
-            instructions="Пожалуйста, обращайтесь к пользователю как Джейн Доу. У пользователя премиум-аккаунт."
+            instructions=""
         )
 
         if run.status == 'completed':
             # Получение сообщений из темы
             messages = client.beta.threads.messages.list(
                 thread_id=thread.id
-            )
-            response_content = messages[-1].content  # Предполагается, что последнее сообщение - это ответ ассистента
+            ).data
+            # Извлечение текста ответа от ассистента
+            response_content = ""
+            for msg in messages:
+                if msg.role == 'assistant':
+                    response_content = msg.content[0].text.value
+                    break
             print(response_content)
         else:
-            response_content = f"Ошибка: {run.status}"
-            print(run.status)
+          print(run.status)
 
         try:
             bot.send_message(message.chat.id, response_content, reply_to_message_id=message.message_id)
