@@ -35,7 +35,7 @@ def handle_question(message):
         command_text = message.text.strip()
         create_texts[message.chat.id] = command_text
 
-        bot.send_message(message.chat.id, f"Идет генерация ответа, подождите... Ваш запрос: {message.text}")
+        bot.send_message(message.chat.id, f"Формирование ответа, подождите...  Ваш запрос:  {message.text}")
         print(command_text)
 
 
