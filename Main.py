@@ -10,7 +10,7 @@ client = OpenAI()
 config = configparser.ConfigParser()
 config.read('congig.conf')  # Исправление опечатки
 Telegram_bot_token = config['API']['Telegram_bot']
-
+assistant_id = config["API"]['assistant_id']
 # Инициализация TeleBot
 bot = telebot.TeleBot(Telegram_bot_token)
 
@@ -38,8 +38,6 @@ def handle_question(message):
         bot.send_message(message.chat.id, f"Идет генерация ответа, подождите... Ваш запрос: {message.text}")
         print(command_text)
 
-        # Убедитесь, что assistant_id корректен и существует
-        assistant_id = "asst_XmZXcXUH2JKU1NqdIspSCcKC"  # Замените на ваш действительный ID ассистента
 
         # Создание новой темы (thread)
         thread = client.beta.threads.create()
