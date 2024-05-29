@@ -77,6 +77,8 @@ def handle_question(message):
         except Exception as e:
             print(f"Ошибка при отправке сообщения {response_content}: {e}")
 
+        bot.send_message(message.chat.id, f"Хочешь задать еще вопрос? Пиши снова!")
+
     except Exception as e:
         print(f"Ошибка {e}")
 
