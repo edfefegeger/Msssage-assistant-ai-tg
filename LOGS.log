@@ -1,8 +1,0 @@
-2024-05-30 14:44:46,049 - INFO - HTTP Request: POST https://api.openai.com/v1/threads "HTTP/1.1 200 OK"
-2024-05-30 14:44:46,341 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_tcxMy1wNErJ3oE5PVG1LRcjZ/messages "HTTP/1.1 200 OK"
-2024-05-30 14:44:46,912 - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_tcxMy1wNErJ3oE5PVG1LRcjZ/runs "HTTP/1.1 200 OK"
-2024-05-30 14:44:47,611 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_tcxMy1wNErJ3oE5PVG1LRcjZ/runs/run_p9z9b2PknkuD8da2PMVM3UnU "HTTP/1.1 200 OK"
-2024-05-30 14:44:48,890 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_tcxMy1wNErJ3oE5PVG1LRcjZ/runs/run_p9z9b2PknkuD8da2PMVM3UnU "HTTP/1.1 200 OK"
-2024-05-30 14:44:49,211 - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_tcxMy1wNErJ3oE5PVG1LRcjZ/messages "HTTP/1.1 200 OK"
-2024-05-30 14:44:49,213 - INFO - Новый запрос от пользователя: 783897764 Запрос: Дай совет
-2024-05-30 14:44:49,213 - INFO - Ответ GPT: Конечно! Пожалуйста, уточните, по какому вопросу вам нужен совет. Это может быть что-то связанное с массажной терапией, здоровьем, питанием или образом жизни. Я здесь, чтобы помочь!
