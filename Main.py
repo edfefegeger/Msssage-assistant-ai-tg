@@ -2,7 +2,7 @@ import configparser
 import sys
 from openai import OpenAI
 import telebot
-
+from logger import log_and_print
 # Инициализация клиента OpenAI
 client = OpenAI()
 
@@ -67,7 +67,10 @@ def handle_question(message):
                 if msg.role == 'assistant':
                     response_content = msg.content[0].text.value
                     break
-            print(response_content)
+
+
+            log_and_print(f"Новый запрос от пользователя: {message.from_user.id} Запрос: {command_text}")
+            log_and_print(f"Ответ GPT: {response_content}")
         else:
           print(run.status)
 
