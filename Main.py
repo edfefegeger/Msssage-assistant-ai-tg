@@ -21,6 +21,7 @@ assistant_id = config["API"]['assistant_id']
 bot = telebot.TeleBot(Telegram_bot_token)
 
 create_texts = {}
+user_request_counts = {}
 
 # Обработчик команды /start
 @bot.message_handler(commands=['start'])
@@ -37,12 +38,21 @@ def handle_question(message):
     try:
         print("Assistant")
 
+        user_id = message.from_user.id
         command_text = message.text.strip()
         create_texts[message.chat.id] = command_text
 
-        bot.send_message(message.chat.id, f"Формирование ответа, подождите... \nВаш запрос:  {message.text}")
-        print(command_text)
+        # Увеличение счетчика запросов для пользователя
+        if user_id in user_request_counts:
+            user_request_counts[user_id] += 1
+        else:
+            user_request_counts[user_id] = 1
 
+        request_count = user_request_counts[user_id]
+
+        bot.send_message(message.chat.id, f"Формирование ответа, подождите... \nВаш запрос: {message.text}")
+        print(command_text)
+        log_and_print(f"Новый запрос от пользователя: {user_id} Запрос: {command_text}")
         # Создание новой темы (thread)
         thread = client.beta.threads.create()
 
@@ -72,8 +82,9 @@ def handle_question(message):
                     response_content = msg.content[0].text.value
                     break
 
-            log_and_print(f"Новый запрос от пользователя: {message.from_user.id} Запрос: {command_text}")
+            
             log_and_print(f"Ответ GPT: {response_content}")
+            log_and_print(f"Пользователь {user_id} сделал {request_count} запрос(ов).")
         else:
             print(run.status)
 
@@ -83,7 +94,7 @@ def handle_question(message):
         except Exception as e:
             print(f"Ошибка при отправке сообщения {response_content}: {e}")
 
-        bot.send_message(message.chat.id, f"Хочешь задать еще вопрос? Пиши снова!")
+        bot.send_message(message.chat.id, f"Хочешь задать еще вопрос? Пиши снова! Ты уже сделал {request_count} запрос(ов).")
 
     except Exception as e:
         print(f"Ошибка {e}")
