@@ -1,7 +1,4 @@
 import logging
-import telebot
-from telebot import types
-import configparser
 
 
 # Конфигурация логгера
