@@ -2,7 +2,7 @@ import logging
 
 
 # Конфигурация логгера
-logging.basicConfig(filename='LOGS.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', encoding='utf-8')
+logging.basicConfig(filename='LOGS.log', level=logging.WARNING, format='%(asctime)s - %(levelname)s - %(message)s', encoding='utf-8')
 
 
 def log_and_print(*messages):
@@ -12,5 +12,5 @@ def log_and_print(*messages):
 
 
     else:
-        logging.info(formatted_message)
+        logging.warn(formatted_message)
         print(formatted_message)

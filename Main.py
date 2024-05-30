@@ -3,6 +3,11 @@ import sys
 from openai import OpenAI
 import telebot
 from logger import log_and_print
+import logging
+
+# Настройка уровня логирования для библиотеки openai и других библиотек
+
+
 # Инициализация клиента OpenAI
 client = OpenAI()
 
@@ -11,6 +16,7 @@ config = configparser.ConfigParser()
 config.read('congig.conf')  # Исправление опечатки
 Telegram_bot_token = config['API']['Telegram_bot']
 assistant_id = config["API"]['assistant_id']
+
 # Инициализация TeleBot
 bot = telebot.TeleBot(Telegram_bot_token)
 
@@ -20,7 +26,6 @@ create_texts = {}
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     bot.send_message(message.chat.id, "Привет! Этот бот отвечает на вопросы по процедурам массажа и взаимодействия с клиентами. Для того чтобы задать вопрос, просто напиши его здесь.")
-
 
 
 # Обработчик всех остальных текстовых сообщений
@@ -37,7 +42,6 @@ def handle_question(message):
 
         bot.send_message(message.chat.id, f"Формирование ответа, подождите... \nВаш запрос:  {message.text}")
         print(command_text)
-
 
         # Создание новой темы (thread)
         thread = client.beta.threads.create()
@@ -68,11 +72,10 @@ def handle_question(message):
                     response_content = msg.content[0].text.value
                     break
 
-
             log_and_print(f"Новый запрос от пользователя: {message.from_user.id} Запрос: {command_text}")
             log_and_print(f"Ответ GPT: {response_content}")
         else:
-          print(run.status)
+            print(run.status)
 
         try:
             bot.send_message(message.chat.id, response_content, reply_to_message_id=message.message_id)
