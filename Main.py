@@ -1,11 +1,7 @@
 import configparser
-import sys
 from openai import OpenAI
 import telebot
 from logger import log_and_print
-import logging
-
-# Настройка уровня логирования для библиотеки openai и других библиотек
 
 
 # Инициализация клиента OpenAI
