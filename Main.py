@@ -1,8 +1,9 @@
 import configparser
+import threading
+import time
 from openai import OpenAI
 import telebot
 from logger import log_and_print
-
 
 # Инициализация клиента OpenAI
 client = OpenAI()
@@ -18,7 +19,10 @@ bot = telebot.TeleBot(Telegram_bot_token)
 
 create_texts = {}
 user_request_counts = {}
+
+# Удаление webhook
 bot.remove_webhook()
+
 # Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -38,16 +42,14 @@ def handle_question(message):
         command_text = message.text.strip()
         create_texts[message.chat.id] = command_text
 
-
-
         # Увеличение счетчика запросов для пользователя
         if user_id in user_request_counts:
             user_request_counts[user_id] += 1
         else:
             user_request_counts[user_id] = 1
 
-        if user_request_counts[user_id] >= 4:
-            bot.send_message(message.chat.id, f"Извините, вы превысили лемит попыток на сегодня. Лимит - 3 попытки.")
+        if user_request_counts[user_id] > 3:
+            bot.send_message(message.chat.id, f"Извините, вы превысили лимит попыток на сегодня. Лимит - 3 запроса в день.")
             return
 
         request_count = user_request_counts[user_id]
@@ -55,6 +57,7 @@ def handle_question(message):
         bot.send_message(message.chat.id, f"Формирование ответа, подождите... \nВаш запрос: {message.text}")
         print(command_text)
         log_and_print(f"Новый запрос от пользователя: {user_id} Запрос: {command_text}")
+
         # Создание новой темы (thread)
         thread = client.beta.threads.create()
 
@@ -84,7 +87,6 @@ def handle_question(message):
                     response_content = msg.content[0].text.value
                     break
 
-            
             log_and_print(f"Ответ GPT: {response_content}")
             log_and_print(f"Пользователь {user_id} сделал {request_count} запрос(ов).")
         else:
@@ -98,10 +100,19 @@ def handle_question(message):
 
         bot.send_message(message.chat.id, f"Хочешь задать еще вопрос? Пиши снова! Ты уже сделал {request_count} запрос(ов).")
 
-
-
     except Exception as e:
         print(f"Ошибка {e}")
+
+def reset_request_counts():
+    while True:
+        time.sleep(86400)  # 86400 секунд = 24 часа
+        user_request_counts.clear()
+        log_and_print("Счетчики запросов сброшены для всех пользователей.")
+
+# Запуск функции сброса счетчиков в отдельном потоке
+reset_thread = threading.Thread(target=reset_request_counts)
+reset_thread.daemon = True
+reset_thread.start()
 
 # Запуск бота
 bot.polling(none_stop=True, timeout=123)
