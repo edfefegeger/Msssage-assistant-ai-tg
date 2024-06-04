@@ -18,7 +18,7 @@ bot = telebot.TeleBot(Telegram_bot_token)
 
 create_texts = {}
 user_request_counts = {}
-
+bot.remove_webhook()
 # Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -38,11 +38,17 @@ def handle_question(message):
         command_text = message.text.strip()
         create_texts[message.chat.id] = command_text
 
+
+
         # Увеличение счетчика запросов для пользователя
         if user_id in user_request_counts:
             user_request_counts[user_id] += 1
         else:
             user_request_counts[user_id] = 1
+
+        if user_request_counts[user_id] >= 4:
+            bot.send_message(message.chat.id, f"Извините, вы превысили лемит попыток на сегодня. Лимит - 3 попытки.")
+            return
 
         request_count = user_request_counts[user_id]
 
@@ -91,6 +97,8 @@ def handle_question(message):
             print(f"Ошибка при отправке сообщения {response_content}: {e}")
 
         bot.send_message(message.chat.id, f"Хочешь задать еще вопрос? Пиши снова! Ты уже сделал {request_count} запрос(ов).")
+
+
 
     except Exception as e:
         print(f"Ошибка {e}")
