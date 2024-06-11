@@ -87,13 +87,16 @@ def handle_question(message):
                     response_content = msg.content[0].text.value
                     break
 
+            if response_content == 'Данной информации нет в нашей базе знаний, но есть ответ в интернете.':
+                user_request_counts[user_id] -= 1
+                request_count = user_request_counts[user_id]
+
             log_and_print(f"Ответ GPT: {response_content}")
             log_and_print(f"Пользователь {user_id} сделал {request_count} запрос(ов).")
         else:
             print(run.status)
 
-        if response_content == 'Данной информации нет в нашей базе знаний, но есть ответ в интернете.':
-            user_request_counts[user_id] -= 1
+
 
         try:
             bot.send_message(message.chat.id, response_content, reply_to_message_id=message.message_id)
