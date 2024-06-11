@@ -107,7 +107,7 @@ def reset_request_counts():
     while True:
         time.sleep(86400)  # 86400 секунд = 24 часа
         user_request_counts.clear()
-        log_and_print("Счетчики запросов сброшены для всех пользователей.")
+        log_and_print("Прошло 24 часа, счетчики запросов сброшены для всех пользователей.")
 
 # Запуск функции сброса счетчиков в отдельном потоке
 reset_thread = threading.Thread(target=reset_request_counts)
