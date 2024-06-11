@@ -92,16 +92,25 @@ def handle_question(message):
         else:
             print(run.status)
 
+        if response_content == 'Данной информации нет в нашей базе знаний, но есть ответ в интернете.':
+            user_request_counts[user_id] -= 1
+
         try:
             bot.send_message(message.chat.id, response_content, reply_to_message_id=message.message_id)
+
+            if response_content == 'Данной информации нет в нашей базе знаний, но есть ответ в интернете.':
+                bot.send_message(message.chat.id, 'Попытка не засчитана, счетчик остался тем же.', reply_to_message_id=message.message_id)
+
             print("Сообщение отправлено в чат")
         except Exception as e:
-            print(f"Ошибка при отправке сообщения {response_content}: {e}")
+            log_and_print(f"Ошибка при отправке сообщения {response_content}: {e}")
+            user_request_counts[user_id] -= 1
 
         bot.send_message(message.chat.id, f"Хочешь задать еще вопрос? Пиши снова! Ты уже сделал {request_count} запрос(ов).")
 
     except Exception as e:
-        print(f"Ошибка {e}")
+        log_and_print(f"Ошибка {e}")
+        user_request_counts[user_id] -= 1
 
 def reset_request_counts():
     while True:
